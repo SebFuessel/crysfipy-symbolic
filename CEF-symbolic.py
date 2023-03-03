@@ -9,12 +9,48 @@ sympy.init_printing(use_unicode=False)
 B20, B22, B40, B42, B44, B60, B62, B64, B66 = sympy.symbols('B20, B22, B40, B42, B44, B60, B62, B64, B66')
 
 
+
 # Dont forget to edit these fields
 Jval = sympy.Rational(3,2)
+symmetry = 'cubic1'
 Jvalstr = f'{Jval:.1f}'.replace('.','p')
 filenameprefix = f'./Symbolic-output/J_{Jvalstr}_B20_B22_B40'
 
-H = sympy.Matrix(   B20 * O_20(Jval) + B22 * O_22(Jval) + B40 * O_40(Jval))
+
+
+if symmetry=='cubic1':
+    # ["B40", "B44", "B60", "B64"]
+    H = sympy.Matrix(   B40 * O_40(Jval) + 5/2*B40 * O_40(Jval) + B60 * O_60(Jval) - 21/2*B60 * O_60(Jval) ) # corrected
+elif symmetry=='cubic2':
+    # ["B40", "B44", "B60", "B62", "B64", "B66"]
+    H = sympy.Matrix(   B40 * O_40(Jval)+ 5/2*B40 * O_40(Jval)+ B60 * O_60(Jval) - B66 * O_66(Jval) -21/2*B60 * O_60(Jval) + B66 * O_66(Jval) )
+elif symmetry=='hexagonal1':
+    # ["B20", "B40", "B60", "B66"]
+    H = sympy.Matrix(B20 * O_20(Jval)+ B40 * O_40(Jval)+ B60 * O_60(Jval)+ B66 * O_66(Jval) )
+elif symmetry=='hexagonal2':
+    # ["B20", "B40", "B60", "B66",  "B6m6"]
+    H = sympy.Matrix(B20 * O_20(Jval)+ B40 * O_40(Jval)+ B60 * O_60(Jval)+ B66 * O_66(Jval)+ B6m6 * O_6m6(Jval) )
+elif symmetry=='trigonal1':
+    # ["B20", "B40", "B43", "B60",  "B63", "B66"]
+    H = sympy.Matrix(B20 * O_20(Jval)+ B40 * O_40(Jval)+ B43 * O_43(Jval)+ B60 * O_60(Jval)+ B63 * O_63(Jval)+ B66 * O_66(Jval) )
+elif symmetry=='trigonal2':
+    # ["B20", "B40", "B43", "B4m3", "B60", "B63","B6m3", "B66","B6m6"]
+    H = sympy.Matrix(B20 * O_20(Jval)+ B40 * O_40(Jval)+ B43 * O_43(Jval)+ B4m3 * O_4m3(Jval)+ B60 * O_60(Jval)+ B63 * O_63(Jval)+ B6m3 * O_6m3(Jval)+ B66 * O_66(Jval)+ B6m6 * O_6m6(Jval) )
+elif symmetry=='tetragonal1':
+    # ["B20", "B40", "B44", "B60",  "B64"]
+    H = sympy.Matrix(   B20 * O_20(Jval) + B40 * O_40(Jval) + B44 * O_44(Jval)  + B60 * O_60(Jval) + B64 * O_64(Jval) )
+elif symmetry=='tetragonal2':
+    # ["B20", "B40", "B44", "B4m4", "B60", "B64", "B6m4"]
+    H = sympy.Matrix(B20 * O_20(Jval)+ B40 * O_40(Jval)+ B44 * O_44(Jval)+ B4m4 * O_4m4(Jval)+ B60 * O_60(Jval)+ B64 * O_64(Jval)+ B6m4 * O_6m4(Jval) )
+elif symmetry=='rhombic':
+    # ["B20", "B22", "B40", "B42",  "B44", "B60", "B62", "B64", "B66"]
+    H = sympy.Matrix(B20 * O_20(Jval)+ B22 * O_22(Jval)+ B40 * O_40(Jval)+ B42 * O_42(Jval)+ B44 * O_44(Jval)+ B60 * O_60(Jval)+ B62 * O_62(Jval)+ B64 * O_64(Jval)+ B66 * O_66(Jval) )
+elif symmetry=='monoclinic':
+    # [  "B20", "B22","B2m2",\
+    #           "B40", "B42","B4m2", "B43","B4m3", "B44","B4m4", \
+    #           "B60", "B62","B6m2", "B63","B6m3", "B64","B6m4", "B66","B6m6"]
+    H = sympy.Matrix(B20*O_20(Jval) + B22*O_22(Jval) + B2m2*O_2m2(Jval)+ B40 * O_40(Jval)+ B42 * O_42(Jval)+ B4m2 * O_4m2(Jval)+ B43 * O_43(Jval)+ B4m3 * O_4m3(Jval)+ B44 * O_44(Jval)+ B4m4 * O_4m4(Jval)+ B60 * O_60(Jval)+ B62 * O_62(Jval)+ B6m2 * O_6m2(Jval)+ B63 * O_63(Jval)+ B6m3 * O_6m3(Jval)+ B64 * O_64(Jval)+ B6m4 * O_6m4(Jval)+ B66 * O_66(Jval)+ B6m6 * O_6m6(Jval)+ )
+
 print(H)
 
 diagonalize = True
