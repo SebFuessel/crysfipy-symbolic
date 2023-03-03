@@ -4,6 +4,8 @@ Symbolic calculations in sympy aiming at determining ananlytical formulas for en
 
 ## To read
 - https://en.wikipedia.org/wiki/Crystal_field_theory
+- https://link.springer.com/article/10.1007/BF01313451
+- https://iopscience.iop.org/article/10.1088/0370-1298/65/3/308
 
 ## Sebastian
 - Edit the `CEF-symbolic.py` script to define the J (`Jval`), symmetry (`Bij`) and the hamiltonian `H`.
