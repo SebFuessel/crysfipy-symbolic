@@ -6,7 +6,7 @@ Symbolic calculations in sympy aiming at determining ananlytical formulas for en
 - https://en.wikipedia.org/wiki/Crystal_field_theory
 
 ## TODO
-- [ ] Take a look at the Hamiltonian for all symmetries and J up to 5 and determine what kind of blocks are present.
+- [X] Take a look at the Hamiltonian for all symmetries and J up to 5 and determine what kind of blocks are present.
 - [ ] Based on how the blocks look like, implement the solutions for eigenvalues for specific matrices.
 - [X] Code in which `Bij` parameters go into Hamiltonian, depending on symmetry.
   - [X] please double-check my new implementation with www2.cpfs.mpg.de/~rotter/homepage_mcphase/manual/node133.html webpage (corrected, see commit history)
