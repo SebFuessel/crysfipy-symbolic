@@ -1,7 +1,4 @@
 '''
-Additions by Michal Stekiel
-
-The matrices and conventions need to be cross-checked against some reliable book.
 Most important things so far:
  1. The eigenvector convention is that the first entry corresponds to highest spin, i.e.
     for the J=3/2 system |3/2> = [1,0,0,0].
@@ -60,12 +57,12 @@ def O_2m2(J):
 
 def O_40(J):
 	JJ = Rational(2*J*(J+1), 2)
-	J2p1 = int(2*J + 1)
+	J2p1 = Integer(2*J + 1)
 
 	Jz = J_z(J)
 	E = eye(J2p1)
 
-	return 35*Jz**4 + (25 - 30 * JJ)*Jz**2 + E * JJ * (3 * JJ - 6)
+	return 35*Jz**4 + (25 - 30 * JJ)*Jz**2 + E*(3 * JJ**2 - 6 * JJ)
 
 
 def O_42(J):
@@ -134,7 +131,7 @@ def O_4m4(J):
 
 def O_60(J):
 	JJ = Rational(2*J*(J+1), 2)
-	J2p1 = int(2*J + 1)
+	J2p1 = Integer(2*J + 1)
 
 	Jz = J_z(J)
 	E = eye(J2p1)
@@ -143,7 +140,7 @@ def O_60(J):
 
 def O_62(J):
 	JJ = Rational(2*J*(J+1), 2)
-	J2p1 = int(2*J + 1)
+	J2p1 = Integer(2*J + 1)
 
 	E = eye(J2p1)
 	Jz = J_z(J)
@@ -158,7 +155,7 @@ def O_62(J):
 
 def O_6m2(J):
 	JJ = Rational(2*J*(J+1), 2)
-	J2p1 = int(2*J + 1)
+	J2p1 = Integer(2*J + 1)
 
 	E = eye(J2p1)
 	Jz = J_z(J)
@@ -199,7 +196,7 @@ def O_6m3(J):
 
 def O_64(J):
 	JJ = Rational(2*J*(J+1), 2)
-	J2p1 = int(2*J + 1)
+	J2p1 = Integer(2*J + 1)
 
 	E = eye(J2p1)
 	Jz = J_z(J)
@@ -214,7 +211,7 @@ def O_64(J):
 
 def O_6m4(J):
 	JJ = Rational(2*J*(J+1), 2)
-	J2p1 = int(2*J + 1)
+	J2p1 = Integer(2*J + 1)
 
 	E = eye(J2p1)
 	Jz = J_z(J)
@@ -242,14 +239,14 @@ def O_6m6(J):
 
 
 if __name__ == '__main__':
-	import cefmatrices
+	import cef_matrices
 	from sympy import pprint
 	Jval = 4.5
 
-	for func_name in dir(cefmatrices):
+	for func_name in dir(cef_matrices):
 		if func_name[0]=='O' or func_name=='J_x' or func_name=='J_y':
 			print(f"Testing matrix {func_name} for J={Jval}")
-			matrix_function = getattr(cefmatrices, func_name)
+			matrix_function = getattr(cef_matrices, func_name)
 			matrix = matrix_function(Jval)
 
 			pprint(matrix)
