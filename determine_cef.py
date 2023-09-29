@@ -28,27 +28,51 @@ from timeit import default_timer as timer
 
 hline = '--------------------------------------------------------------------------------------'
 
-Jval = 3
-lattice='orthorhombic'
+Jval = 1
+lattice='trigonal_2'
 determine_eigenvectors = False
 
-H = CEF_Hamiltonian(symmetry=lattice, Jval=Jval)
+Jmax=4.5
+Symmetries=[ 'tetragonal_1', 'tetragonal_2', 'trigonal_1', 'trigonal_2', 'hexagonal_1', 'hexagonal_2'] #monoclinic takes ages to calculate, cubic ones are out of range so they aren't implemented
+y_Vals=[[], [], [], [], [], []]
+dia_x=[]
+colours=['b', 'g', 'r', 'c', 'm', 'y', 'k', 'k--']
 
-start_time = timer()
+for x, element in enumerate(Symmetries):
+    lattice=element
+    for j in range((int)(Jmax*2-1)):
+        
+        Jval=1+j/2
+        print(Jval)
+        delta=0
+        H = CEF_Hamiltonian(symmetry=lattice, Jval=Jval)   
+        start_time = timer()
 
-H.make_block_form()
+        H.make_block_form()
 
-H.determine_eigenvalues()
-eigenvalues_timer = timer()
-print(f'# Determining eigenvalues = {eigenvalues_timer-start_time:4f} s')
+        H.determine_eigenvalues()
+        eigenvalues_timer = timer()
+        delta = (float)(eigenvalues_timer-start_time)
+        
+        print(f'# Determining eigenvalues = {eigenvalues_timer-start_time:4f} s')
+        y_Vals[x].append(delta)
 
-if determine_eigenvectors:
-    H.determine_eigenvectors()
-    eigenvectors_timer = timer()
-    print(f'# Determining eigenvectors = {eigenvectors_timer-start_time:4f} s')
+        if determine_eigenvectors:
+            H.determine_eigenvectors()
+            eigenvectors_timer = timer()
+            print(f'# Determining eigenvectors = {eigenvectors_timer-start_time:4f} s')
 
+for i in range((int)(Jmax*2-1)):
+    dia_x.append(1+i/2)
+plt.title('Calculation Time for Eigenvalues depending on Jval')
+plt.xlabel('Jval')
+plt.ylabel('Calculation Time in seconds')
+plt.grid(True)
 
-
+for x, element in enumerate(y_Vals):
+    plt.plot(dia_x,element, colours[x], label=Symmetries[x])
+plt.legend()
+plt.show()
 # # Evaluations
 # sqrt  = np.emath.sqrt
 # I = 1j
