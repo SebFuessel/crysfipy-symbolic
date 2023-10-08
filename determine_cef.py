@@ -1,6 +1,7 @@
 import sympy
 from sympy import pprint
 import numpy as np
+from matplotlib import pyplot as plt
 
 from cef_hamiltonian import CEF_Hamiltonian, Hamiltonian
 # import mikibox as ms
