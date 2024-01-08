@@ -31,48 +31,69 @@ hline = '-----------------------------------------------------------------------
 
 Jval = 1
 lattice='trigonal_2'
-determine_eigenvectors = False
+determine_eigenvectors = True
 
-Jmax=4.5
-Symmetries=[ 'tetragonal_1', 'tetragonal_2', 'trigonal_1', 'trigonal_2', 'hexagonal_1', 'hexagonal_2'] #monoclinic takes ages to calculate, cubic ones are out of range so they aren't implemented
-y_Vals=[[], [], [], [], [], []]
-dia_x=[]
-colours=['b', 'g', 'r', 'c', 'm', 'y', 'k', 'k--']
+Jmax=5
+Symmetries=['tetragonal_1', 'tetragonal_2', 'trigonal_1', 'trigonal_2', 'hexagonal_1', 'hexagonal_2'] #monoclinic takes ages to calculate, cubic ones are out of range so they aren't implemented
+calc_results=[]
+Symmetries_Eigenvectors=['tetragonal_1_Vec', 'tetragonal_2_Vec', 'trigonal_1_Vec', 'trigonal_2_Vec', 'hexagonal_1_Vec', 'hexagonal_2_Vec']
+colours=['b', 'g', 'r', 'c', 'm', 'y', 'b--', 'g--', 'r--', 'c--', 'm--', 'y--','k--']
 
-for x, element in enumerate(Symmetries):
-    lattice=element
-    for j in range((int)(Jmax*2-1)):
-        
-        Jval=1+j/2
-        print(Jval)
+for symmetry in Symmetries:
+    lattice=symmetry
+    if determine_eigenvectors:
+        determine_eigenvectors_b=True
+    for j in np.arange(1,Jmax,0.5):
+        print(j)
         delta=0
-        H = CEF_Hamiltonian(symmetry=lattice, Jval=Jval)   
+        delta2=0
+        H = CEF_Hamiltonian(symmetry=lattice, Jval=j)   
         start_time = timer()
 
         H.make_block_form()
 
         H.determine_eigenvalues()
         eigenvalues_timer = timer()
-        delta = (float)(eigenvalues_timer-start_time)
+        delta = eigenvalues_timer-start_time
         
         print(f'# Determining eigenvalues = {eigenvalues_timer-start_time:4f} s')
-        y_Vals[x].append(delta)
 
-        if determine_eigenvectors:
+        if delta>10:
+            break
+
+        if determine_eigenvectors_b:
+            vector_start=timer()
             H.determine_eigenvectors()
             eigenvectors_timer = timer()
-            print(f'# Determining eigenvectors = {eigenvectors_timer-start_time:4f} s')
+            delta2=eigenvectors_timer-vector_start
+            print(f'# Determining eigenvectors = {eigenvectors_timer-vector_start:4f} s')
+            if delta2>10 or (symmetry=='trigonal_1' and (j+0.5)>2.5) or ((symmetry=='tetragonal_1' or 'tetragonal_2') and j+0.5>4) or (symmetry=='trigonal_2' and (j+0.5)>3):
+                determine_eigenvectors_b=False
 
-for i in range((int)(Jmax*2-1)):
-    dia_x.append(1+i/2)
+        calc_results.append([delta, j, symmetry, delta2])
+
 plt.title('Calculation Time for Eigenvalues depending on Jval')
 plt.xlabel('Jval')
 plt.ylabel('Calculation Time in seconds')
 plt.grid(True)
-
-for x, element in enumerate(y_Vals):
-    plt.plot(dia_x,element, colours[x], label=Symmetries[x])
+plt.yscale("log")
+for x, symmetry in enumerate (Symmetries):
+    diay=[]
+    diax=[]
+    diax_vec=[]
+    diay_vec=[]
+    for entry in calc_results:
+        if entry[2]==symmetry:
+            diay.append(entry[0])
+            diax.append(entry[1])
+            if entry[3]>0:
+                diax_vec.append(entry[1])
+                diay_vec.append(entry[3])
+    plt.plot(diax, diay, colours[x], label=symmetry)
+    plt.plot(diax_vec, diay_vec, colours[x+6], label=Symmetries_Eigenvectors[x])
+            
 plt.legend()
+plt.savefig('EigenVals_logscale.png', dpi=300)
 plt.show()
 # # Evaluations
 # sqrt  = np.emath.sqrt
